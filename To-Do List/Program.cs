@@ -20,6 +20,8 @@ namespace To_Do_List
             /// Выбор задачи по номеру в списке
             /// </summary>
             static public int CursorSelection = 2;
+            public static bool InMemo;
+
         public static void Main(string[] args)
         {
           
@@ -60,27 +62,12 @@ namespace To_Do_List
                     Memo.AllMemos.Add(new Memo()
                     {
                         Name = Memo.InputMemoName(),
-<<<<<<< HEAD
                         Description = Memo.InputMemoDescription(),
                         Day = time.AddDays(DN).Day,
                         Mouth = time.AddDays(DN).Month,
                         Year = time.AddDays(DN).Year,
                     });  
                     Memo.AllMemos[Memo.AllMemos.Count-1].Id = Memo.AllMemos.Where(i => i.Day == time.AddDays(DN).Day).ToList().Count;
-=======
-                        Description = Memo.InputMemoDescription() + $"({day}.{month})"
-                    });
-                    Memo.DayList.Add(MemoBook);
-
-                    Memo.MonthList[time.AddDays(DN).Day] = Memo.DayList;
-
-                                                // Месяц[День - №Списка колво списков - Задача]
-                    Memo.MonthList[time.AddDays(DN).Day][Memo.MonthList[time.AddDays(DN).Day].Count-1]
-                        [  Memo.MonthList[time.AddDays(DN).Day][Memo.MonthList[time.AddDays(DN).Day].Count - 1] ].IdBuffer =
-                        Memo.MonthList[time.AddDays(DN).Day][Memo.MonthList[time.AddDays(DN).Day].Count - 1]
-                        [Memo.MonthList[time.AddDays(DN).Day][Memo.MonthList[time.AddDays(DN).Day].Count]].Count;
-
->>>>>>> cd864cf9f24de9c2e98ae1182535dcf91c0f2366
                     Console.Clear();
                     Console.WriteLine($"\n Выбрана дата {day}.{month}.{time.Year}");
                     Memo.Check(Memo.AllMemos);
@@ -104,21 +91,34 @@ namespace To_Do_List
                         Page(Memo.AllMemos, day, month);
                         Memo.Check(Memo.AllMemos);
                         break;
+
                     case ConsoleKey.DownArrow:
                         CursorSelection++;
                         Memo.Check(Memo.AllMemos);
                         break;
+
+                    case ConsoleKey.Enter:
+
+                        Memo.Open();
+                        // Enter
+                        break;
+
                     case ConsoleKey.UpArrow:
                         CursorSelection--;
                         Memo.Check(Memo.AllMemos);
                         //Console.Write("^");
                         break;
+
                     case ConsoleKey.LeftArrow:
                         DN--;
+                        CursorSelection=1;
                         Page(Memo.AllMemos, day, month);
                         Memo.Check(Memo.AllMemos);
                         break;
+
                     case ConsoleKey.RightArrow:
+                        CursorSelection=1;
+                        InMemo = !InMemo;
                         DN++;
                         Page(Memo.AllMemos, day, month);
                         Memo.Check(Memo.AllMemos);
@@ -162,7 +162,7 @@ namespace To_Do_List
             Console.Clear();
             Console.SetCursorPosition(1, 1);
             Console.CursorVisible = false;
-            Console.Write($"Выбрана дата {day}.{month}.{time.AddDays(DN).Year}");
+            Console.Write($"Выбрана дата {day}.{month}.{time.AddDays(DN).Year}\n");
         }
     }
 }

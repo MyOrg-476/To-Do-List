@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace To_Do_List
 {
@@ -14,6 +12,7 @@ namespace To_Do_List
         public int Day = time.AddDays(DN).Day;
         public int Mouth = time.AddDays(DN).Month;
         public int Year = time.AddDays(DN).Year;
+        public DateTime FinishTime;
         public int Id = 0;
         static public List<Memo> AllMemos = new List<Memo>();
 
@@ -34,36 +33,35 @@ namespace To_Do_List
         /// <param name="AllMemo"></param>
         public static void Select(List<Memo> AllMemo)
         {
-            if(CursorSelection > 2)
+            /*   if(CursorSelection > 2)
+               {
+               Console.SetCursorPosition(1, CursorSelection);
+               Console.WriteLine($"{CursorSelection}>");
+               }*/
+            if (CursorSelection <= 1)
             {
-            Console.SetCursorPosition(1, CursorSelection);
-            Console.WriteLine($"{CursorSelection}>");
-            }
-            if (CursorSelection < 2)
-            {
-                CursorSelection = 2;
-                Console.SetCursorPosition(1, CursorSelection);
-                Console.Write($"{CursorSelection}>");
+                CursorSelection = 1;
             }
             if (CursorSelection > AllMemos.Where(i => i.Day == time.AddDays(DN).Day).ToList().Count)
             {
-                CursorSelection = AllMemos.Where(i => i.Day == time.AddDays(DN).Day).ToList().Count;
+                CursorSelection--;
                 Console.SetCursorPosition(1, CursorSelection + 1);
-                Console.Write($"{CursorSelection}->");
+
             }
+            Console.SetCursorPosition(1, CursorSelection + 1);
+            Console.Write($"{CursorSelection}>");
         }
 
         /// <summary>
         /// Вывод задач
         /// </summary>
         /// <param name="AllMemo"></param>
-        /// 
         public static void Check(List<Memo> AllMemo)
         {
             Console.Clear();
-            Page(Memo.AllMemos, Program.day, month);
-            Console.Write("  Вектор времени: "+DN);
-            if(AllMemos.Where(i => i.Year == time.AddDays(DN).Year &&
+            Page(AllMemos, day, month);
+            //Console.Write("  Вектор времени: " + DN);
+            if (AllMemos.Where(i => i.Year == time.AddDays(DN).Year &&
             i.Mouth == time.AddDays(DN).Month &&
             i.Day == time.AddDays(DN).Day).ToList().Count == 0)
             {
@@ -71,36 +69,64 @@ namespace To_Do_List
                         " CTRL+ для создания задачи, V для просмотра");
             }
             else
-            { 
-                Console.Write("   Кол-во заданий "+AllMemo.Count+"\n");
+            {
+                //Console.Write("   Кол-во заданий " + AllMemo.Count + "\n");
                 List<Memo> t = new List<Memo>();
 
                 foreach (var memo in AllMemo)
                 {
-                    if(memo.Year == time.AddDays(DN).Year &&
+                    if (memo.Year == time.AddDays(DN).Year &&
                     memo.Mouth == time.AddDays(DN).Month &&
-                    memo.Day == time.AddDays(DN).Day)        
-                       Console.WriteLine($"    {memo.Id}. {memo.Name}");
+                    memo.Day == time.AddDays(DN).Day)
+                        Console.WriteLine($"    {memo.Id}. {memo.Name}");
                 }
                 Console.CursorVisible = false;
-            Select(AllMemo);
+                Select(AllMemo);
             }
         }
         /// <summary>
         /// Просмотр с описанием
         /// </summary>
-        /// <param name="memos"></param>
-        public static void Open(Memo memos)
+        public static void Open(/*Memo memos*/)
         {
-
-            foreach (var memo in AllMemos)
+            if (AllMemos.Where(i => i.Year == time.AddDays(DN).Year &&
+            i.Mouth == time.AddDays(DN).Month &&
+            i.Day == time.AddDays(DN).Day).ToList().Count != 0)
             {
-                if (memo.Year == time.AddDays(DN).Year &&
-                memo.Mouth == time.AddDays(DN).Month &&
-                memo.Day == time.AddDays(DN).Day)
-                    Console.WriteLine($"    {memo.Id}. {memo.Name}\n   {memo.Description}");
+                Console.Clear();
+                Page(AllMemos, day, month);
+                foreach (var memo in AllMemos)
+                {
+                    if (memo.Year == time.AddDays(DN).Year &&
+                    memo.Mouth == time.AddDays(DN).Month &&
+                    memo.Day == time.AddDays(DN).Day && memo.Id < CursorSelection)
+                        Console.WriteLine($"    {memo.Id}. {memo.Name}");
+                }
+
+                foreach (var memo in AllMemos.Where(i =>
+                        i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month &&
+                        i.Day == time.AddDays(DN).Day
+                        && i.Id == CursorSelection).ToList())
+                {
+                    if (memo.Year == time.AddDays(DN).Year &&
+                    memo.Mouth == time.AddDays(DN).Month &&
+                    memo.Day == time.AddDays(DN).Day && memo.Id == CursorSelection
+                        && AllMemos.Where(i =>
+                        i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month &&
+                        i.Day == time.AddDays(DN).Day
+                        && i.Id == CursorSelection).ToList().Count != 0)
+                        Console.WriteLine($"    {memo.Id}. {memo.Name}\n   {memo.Description}");
+                }
+                foreach (var memo in AllMemos)
+                {
+                    if (memo.Year == time.AddDays(DN).Year &&
+                    memo.Mouth == time.AddDays(DN).Month &&
+                    memo.Day == time.AddDays(DN).Day && memo.Id > CursorSelection)
+                        Console.WriteLine($"    {memo.Id}. {memo.Name}");
+                }
             }
-            //Console.WriteLine($"    {memos.Id}. {memos.Name}\n   {memos.Description}");
         }
     }
 }
