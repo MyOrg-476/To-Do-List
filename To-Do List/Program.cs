@@ -50,7 +50,7 @@ namespace To_Do_List
             if (Memo.AllMemos.Count == 0)
             {
                 Console.WriteLine("   На сегодня нет записей\n " +
-                    " CTRL+ для создания задачи, V для просмотра");
+                    " + для создания задачи, - для удаления, R для редактирования");
             }
             while (true)
             {
@@ -72,13 +72,58 @@ namespace To_Do_List
                     Console.WriteLine($"\n Выбрана дата {day}.{month}.{time.Year}");
                     Memo.Check(Memo.AllMemos);
                 }
-                if (consoleKeyInfo.Modifiers.HasFlag(ConsoleModifiers.Control) && consoleKeyInfo.Key == ConsoleKey.OemMinus)
+                if (consoleKeyInfo.Key == ConsoleKey.OemMinus && 
+                    Memo.AllMemos.Where(i => i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month && i.Day == time.AddDays(DN).Day && i.Id == CursorSelection).ToList().Count != 0)
                 {
-                    //Console.WriteLine("-");
+                    Console.CursorVisible = true;
+                    DataFix(ref day, ref month);
+
+                    Memo.AllMemos.RemoveAt(Memo.AllMemos.FindIndex(i =>
+                        i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month &&
+                        i.Day == time.AddDays(DN).Day
+                        && i.Id == CursorSelection));
+
+
+                    List<Memo> Dels = Memo.AllMemos.Where(i => i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month && i.Day == time.AddDays(DN).Day).ToList();
+
+                    for (int g = 0; g < Dels.Count; g++)
+                    {
+                        Dels[g].Id = g + 1;
+                    }
+                    Console.Clear();
+                    Console.WriteLine($"\n Выбрана дата {day}.{month}.{time.Year}");
+                    Memo.Check(Memo.AllMemos);
                 }
-                if (consoleKeyInfo.Modifiers.HasFlag(ConsoleModifiers.Control) && consoleKeyInfo.Key == ConsoleKey.R)
+                if (consoleKeyInfo.Key == ConsoleKey.R &&
+                    Memo.AllMemos.Where(i => i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month && i.Day == time.AddDays(DN).Day && i.Id == CursorSelection).ToList().Count != 0)
                 {
+                    InMemo = false;
                     //Console.WriteLine("R");
+                    Console.CursorVisible = true;
+                    DataFix(ref day, ref month);
+
+                    Memo.AllMemos[Memo.AllMemos.FindIndex(i => i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month &&
+                        i.Day == time.AddDays(DN).Day
+                        && i.Id == CursorSelection)].Name = Memo.InputMemoName();
+                    Memo.AllMemos[Memo.AllMemos.FindIndex(i => i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month &&
+                        i.Day == time.AddDays(DN).Day
+                        && i.Id == CursorSelection)].Description = Memo.InputMemoDescription();
+                    List<Memo> Dels = Memo.AllMemos.Where(i => i.Year == time.AddDays(DN).Year &&
+                        i.Mouth == time.AddDays(DN).Month && i.Day == time.AddDays(DN).Day).ToList();
+
+                    for (int g = 0; g < Dels.Count; g++)
+                    {
+                        Dels[g].Id = g + 1;
+                    }
+                    Console.Clear();
+                    Console.WriteLine($"\n Выбрана дата {day}.{month}.{time.Year}");
+                    Memo.Check(Memo.AllMemos);
                 }
 
                 switch (consoleKeyInfo.Key)
@@ -94,32 +139,42 @@ namespace To_Do_List
 
                     case ConsoleKey.DownArrow:
                         CursorSelection++;
+                        InMemo = false;
                         Memo.Check(Memo.AllMemos);
                         break;
 
                     case ConsoleKey.Enter:
 
-                        Memo.Open();
+                        InMemo = !InMemo;
+                        if (InMemo)
+                        {
+                            Memo.Open();
+                        }
+                        else
+                        {
+                            Memo.Check(Memo.AllMemos);
+                        }
                         // Enter
                         break;
 
                     case ConsoleKey.UpArrow:
                         CursorSelection--;
+                        InMemo = false;
                         Memo.Check(Memo.AllMemos);
-                        //Console.Write("^");
                         break;
 
                     case ConsoleKey.LeftArrow:
                         DN--;
                         CursorSelection=1;
+                        InMemo = false;
                         Page(Memo.AllMemos, day, month);
                         Memo.Check(Memo.AllMemos);
                         break;
 
                     case ConsoleKey.RightArrow:
                         CursorSelection=1;
-                        InMemo = !InMemo;
                         DN++;
+                        InMemo = false;
                         Page(Memo.AllMemos, day, month);
                         Memo.Check(Memo.AllMemos);
                         break;

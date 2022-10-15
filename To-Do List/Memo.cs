@@ -12,18 +12,25 @@ namespace To_Do_List
         public int Day = time.AddDays(DN).Day;
         public int Mouth = time.AddDays(DN).Month;
         public int Year = time.AddDays(DN).Year;
-        public DateTime FinishTime;
         public int Id = 0;
         static public List<Memo> AllMemos = new List<Memo>();
+        private static int x = 4;
 
         public static string InputMemoName()
         {
-            Console.Write("\n  Ведите название записки: ");
+            Console.SetCursorPosition(x, CursorSelection+2);
+            Console.Write("  Ведите название записки:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            Console.SetCursorPosition(31, CursorSelection+2);
+
             return Console.ReadLine();
         }
         public static string InputMemoDescription()
         {
-            Console.Write("  Ведите описание:\n  ");
+            Console.SetCursorPosition(x, CursorSelection + 3);
+            Console.Write("  Ведите описание:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            Console.SetCursorPosition(0, CursorSelection + 4);
+            Console.Write("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            Console.SetCursorPosition(x+3, CursorSelection + 4);
             return Console.ReadLine();
         }
 
@@ -33,11 +40,6 @@ namespace To_Do_List
         /// <param name="AllMemo"></param>
         public static void Select(List<Memo> AllMemo)
         {
-            /*   if(CursorSelection > 2)
-               {
-               Console.SetCursorPosition(1, CursorSelection);
-               Console.WriteLine($"{CursorSelection}>");
-               }*/
             if (CursorSelection <= 1)
             {
                 CursorSelection = 1;
@@ -46,10 +48,9 @@ namespace To_Do_List
             {
                 CursorSelection--;
                 Console.SetCursorPosition(1, CursorSelection + 1);
-
             }
             Console.SetCursorPosition(1, CursorSelection + 1);
-            Console.Write($"{CursorSelection}>");
+            Console.Write($"->");
         }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace To_Do_List
             i.Day == time.AddDays(DN).Day).ToList().Count == 0)
             {
                 Console.WriteLine("   На сегодня нет записей\n " +
-                        " CTRL+ для создания задачи, V для просмотра");
+                        " + для создания задачи, - для удаления, R для редактирования");
             }
             else
             {
