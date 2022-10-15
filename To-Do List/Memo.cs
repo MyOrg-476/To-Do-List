@@ -19,7 +19,7 @@ namespace To_Do_List
         public static string InputMemoName()
         {
             Console.SetCursorPosition(x, CursorSelection+2);
-            Console.Write("  Ведите название записки:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            Console.Write("  Введите название записки:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
             Console.SetCursorPosition(31, CursorSelection+2);
 
             return Console.ReadLine();
@@ -27,7 +27,7 @@ namespace To_Do_List
         public static string InputMemoDescription()
         {
             Console.SetCursorPosition(x, CursorSelection + 3);
-            Console.Write("  Ведите описание:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            Console.Write("  Введите описание:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
             Console.SetCursorPosition(0, CursorSelection + 4);
             Console.Write("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
             Console.SetCursorPosition(x+3, CursorSelection + 4);
